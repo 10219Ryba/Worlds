@@ -15,15 +15,23 @@ import frc.robot.Constants.DriveConstants.ShooterConstants;
 public class ShooterSubsystem extends SubsystemBase {
   /** Creates a new ShooterSubsystem. */
   public final TalonFX smOne, smTwo;
+  //public final CANSparkMax smOne, smTwo;
 
 
   public ShooterSubsystem() {
+// for talons
+
     smOne = new TalonFX(ShooterConstants.shootOne);
     smTwo = new TalonFX(ShooterConstants.shootTwo);
     
+// for sims
+
+    // smOne = new CANSparkMax(ShooterConstants.shootOne, MotorType.kBrushed);
+    // smTwo = new CANSparkMax(ShooterConstants.shootTwo, MotorType.kBrushed);
+    
 
   }
-  public void intake() {
+  public void sourceIntake() {
     smOne.set(-1);
     smTwo.set(-1);
   }
@@ -37,6 +45,15 @@ public class ShooterSubsystem extends SubsystemBase {
     smOne.set(0);
     smTwo.set(0);
   }
+  public void shootFromIntake() {
+    smOne.set(1);
+    smTwo.set(1);
+  }
+  public void shootBoth() {
+    smOne.set(1);
+    smTwo.set(1);
+  }
+  
 
   @Override
   public void periodic() {
