@@ -35,7 +35,7 @@ public class AutoDrive extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    driveSubsystem.arcadeDrive(0, 0);
+    driveSubsystem.driveOff();
     autoTimer.reset();
   }
 
