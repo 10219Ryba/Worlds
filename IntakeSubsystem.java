@@ -24,4 +24,14 @@ public class IntakeSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
+  public void groundIntake() {
+    bottomIntake.set(1);
+  }
+  public void pushNote() {
+    topIntake.set(1);
+  }
+  public void intakeOff() {
+    topIntake.set(0);
+    bottomIntake.set(0);
+  }
 }
