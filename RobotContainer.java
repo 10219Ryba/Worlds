@@ -7,7 +7,12 @@ package frc.robot;
 import frc.robot.Constants.DriveConstants.ShooterConstants;
 import frc.robot.Constants.DriveConstants.XboxPorts;
 import frc.robot.commands.AutoDrive;
+import frc.robot.commands.AutoShoot;
+import frc.robot.commands.InstantShoot;
+import frc.robot.commands.IntakeShootCommand;
 import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.TurnToAngle;
+import frc.robot.commands.DriveWithEncoders;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -37,24 +42,23 @@ private final IntakeSubsystem intake = new IntakeSubsystem();
 private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
   CommandXboxController xbox1 = new CommandXboxController(XboxPorts.xbox1);
-  CommandXboxController xbox2 = new CommandXboxController(XboxPorts.xbox2);
+  //CommandXboxController xbox2 = new CommandXboxController(XboxPorts.xbox2);
   
-  public RobotContainer() {
+  public RobotContainer() { 
     configureBindings();
-    autoChooser.setDefaultOption("Drive Forwards", new AutoDrive(driveSubsystem, 0.3));
-    autoChooser.addOption("Drive Backwards", new AutoDrive(driveSubsystem, -0.3));
-    autoChooser.addOption("Speaker Shot", new ShooterCommand(shoot).andThen(new WaitCommand(1)).andThen(Commands.runOnce(shoot::shootOff, shoot)));
-    autoChooser.addOption("Speaker Backwards", new ShooterCommand(shoot).andThen(new WaitCommand(1)).andThen(Commands.runOnce(shoot::shootOff, shoot)).andThen(new AutoDrive(driveSubsystem, -1)));
+    autoChooser.setDefaultOption("Drive Forwards", new AutoDrive(driveSubsystem, 1));
+    autoChooser.addOption("Drive Backwards", new AutoDrive(driveSubsystem, -1));
+    autoChooser.addOption("Speaker Shot", new AutoShoot(shoot).andThen(Commands.runOnce(shoot::shootOff, shoot)));
+    autoChooser.addOption("Speaker Backwards", new AutoShoot(shoot).andThen(Commands.runOnce(shoot::shootOff, shoot)).andThen(new AutoDrive(driveSubsystem, -0.4)));
+    autoChooser.addOption("Do Nothing", null);
     SmartDashboard.putData(autoChooser);
+
     driveSubsystem.setDefaultCommand(new RunCommand(
       () -> 
       driveSubsystem.arcadeDrive(
-        xbox1.getRightX(),
-        -xbox1.getLeftY()),
+        xbox1.getLeftY(),
+        -xbox1.getRightX()),
       driveSubsystem));
-  
-  
-
   }
 
   /**
@@ -68,20 +72,13 @@ private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
    */
   private void configureBindings() {
 
-    xbox1.a().whileTrue(new InstantCommand(() -> {
-      intake.bottomIntake.set(1);
-    })).onFalse(new InstantCommand(() -> {
-      intake.bottomIntake.set(0);
-    }));
-    // Instant Shoot
-    xbox1.b().whileTrue(new InstantCommand(() -> {
-      shoot.smOne.set(1);
-      shoot.smTwo.set(1);
-  })).onFalse(new InstantCommand(() -> {shoot.smOne.set(0); shoot.smTwo.set(0);}));
-    
+  xbox1.x().onTrue(new TurnToAngle(driveSubsystem, 90));
+  xbox1.a().onTrue(new DriveWithEncoders(driveSubsystem, 3.0));
+  xbox1.b().whileTrue(new InstantShoot(shoot));
   xbox1.rightTrigger(.6).whileTrue(new ShooterCommand(shoot));
-  xbox1.leftTrigger(.6).onTrue(Commands.runOnce(shoot::intake, shoot)).onFalse(Commands.runOnce(shoot::shootOff, shoot));
-
+  xbox1.leftTrigger(.6).whileTrue(Commands.runOnce(shoot::sourceIntake, shoot)).onFalse(Commands.runOnce(shoot::shootOff, shoot));
+  // xbox1.leftTrigger(.6).whileTrue(Commands.runOnce(intake::groundIntake, intake)).onFalse(Commands.runOnce(intake::intakeOff, intake));
+  // xbox1.rightTrigger(.6).whileTrue(new IntakeShootCommand(intake, shoot)).onFalse(Commands.runOnce(shoot::shootOff)).onFalse(Commands.runOnce(intake::intakeOff));
 
   }
     
