@@ -64,7 +64,7 @@ public class DriveSubsystem extends SubsystemBase {
     lFM.follow(lRM);
 
     // Inverts One Motor
-    rRM.setInverted(true);
+    //rRM.setInverted(true);
 
     //Encoders Distance Per Pulse
     leftEncoder.setDistancePerPulse(DriveConstants.EncoderDistancePerPulse);
@@ -75,55 +75,56 @@ public class DriveSubsystem extends SubsystemBase {
   public void arcadeDrive(double throttle, double rotation) {
     drive.arcadeDrive(throttle, rotation);
   }
+  public void driveOff() {
+    drive.arcadeDrive(0, 0);
+  }
 
-  ///////////START/////////////OF//////////////ENCODERS/////////////////////////
-  // Resets Encoder Values to Zero                                            //
-  public void resetEncoders() {                                               //
-    leftEncoder.reset();                                                      //
-    rightEncoder.reset();                                                     //
-  }                                                                           //
-                                                                              //
-  // Gets Average distance of the two encoders                                //
-  public double getAverageEncoderDistance() {                                 //
-    return (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;    //
-  }                                                                           //
-                                                                              //
-  // Gets Left Encoder                                                        //
-  public Encoder getLeftEncoder() {                                           //
-    return leftEncoder;                                                       //
-  }                                                                           //
-                                                                              //
-  // Gets Right Encoder                                                       //
-  public Encoder getRightEncoder() {                                          //
-    return rightEncoder;                                                      //
-  }                                                                           //
-  ///////////////END//////////////OF///////////ENCODERS/////////////////////////
+  // Resets Encoder Values to Zero                                            
+  public void resetEncoders() {                                               
+    leftEncoder.reset();                                                      
+    rightEncoder.reset();                                                     
+  }                                                                           
+                                                                              
+  // Gets Average distance of the two encoders                                
+  public double getAverageEncoderDistance() {                                 
+    return (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;    
+  }                                                                           
+                                                                              
+  // Gets Left Encoder                                                        
+  public Encoder getLeftEncoder() {                                           
+    return leftEncoder;                                                       
+  }                                                                           
+                                                                              
+  // Gets Right Encoder                                                       
+  public Encoder getRightEncoder() {                                          
+    return rightEncoder;                                                      
+  }                                                                           
 
-  ////////START/////////////////OF///////////////////GYRO///////////////////////////////////////////////
-  // Zeroes the heading of the robot                                                                  //
-  public void zeroHeading() {                                                                         //
-    gyro.reset();                                                                                     //
-  }                                                                                                   //
-                                                                                                      //
-  // Returns the heading of the robot                                                                 //
-  public double getHeading() {                                                                        //
-    return Math.IEEEremainder(gyro.getAngle(), 360) * (DriveConstants.gyroReversed ? -1.0 : 1.0);  //
-  }                                                                                                   //
-                                                                                                      //
-  // Returns turn rate of robot                                                                       //
-  public double getTurnRate() {                                                                       //
-    return gyro.getRate() * (DriveConstants.gyroReversed ? -1.0 : 1.0);                               //
-  }                                                                                                   //
-  public void outputValues() {                                                                        //
+
+  // Zeroes the heading of the robot                                                                  
+  public void zeroHeading() {                                                                         
+    gyro.reset();                                                                                     
+  }                                                                                                 
+                                                                                                      
+  // Returns the heading of the robot                                                                 
+  public double getHeading() {                                                                        
+    return Math.IEEEremainder(gyro.getAngle(), 360) * (DriveConstants.gyroReversed ? -1.0 : 1.0);  
+  }                                                                                                   
+                                                                                                      
+  // Returns turn rate of robot                                                                       
+  public double getTurnRate() {                                                                       
+    return gyro.getRate() * (DriveConstants.gyroReversed ? -1.0 : 1.0);                               
+  }                                                                                                   
+  public void outputValues() {                                                                        
                                   
-  }                                                                                                   //
-//////////END////////////////////////OF/////////////////////GYRO////////////////////////////////////////
+  }                                                                                                   
+
   
   
   
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("GyroYawAngle", gyro.getYaw());                                      //
+    SmartDashboard.putNumber("GyroYawAngle", gyro.getYaw());                                   
     SmartDashboard.putNumber("GyroRollAngle", gyro.getRoll()); 
   }
 
