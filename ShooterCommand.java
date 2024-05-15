@@ -29,7 +29,6 @@ public class ShooterCommand extends Command {
   @Override
   public void execute() {
     if (shootTimer.hasElapsed(1)) {
-
       shooterSubsystem.shoot();
     }
   }
@@ -43,7 +42,9 @@ public class ShooterCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-
+    if (shootTimer.hasElapsed(2)) {
+      return true;
+    }
     return false;
   }
 }
